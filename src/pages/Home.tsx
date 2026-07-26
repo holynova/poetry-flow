@@ -6,6 +6,7 @@ import { useDeck } from '../hooks/useDeck';
 import { HomeHeader } from '../components/HomeHeader';
 import { ActionButtons } from '../components/ActionButtons';
 import { ShareModal } from '../components/ShareModal';
+import { Heart, Share2, X } from 'lucide-react';
 import type { ThemeId } from '../types';
 
 interface HomeProps {
@@ -19,6 +20,7 @@ export const Home: React.FC<HomeProps> = ({ currentTheme, onThemeChange }) => {
   const { recordAction } = usePoemStats();
   const [hearts, setHearts] = useState<number[]>([]);
   const [isShareOpen, setIsShareOpen] = useState(false);
+  const [isActionTrayOpen, setIsActionTrayOpen] = useState(false);
 
   // Show stack effect by rendering top 2 cards
   const activeCards = cards.slice(0, 2);
@@ -33,6 +35,7 @@ export const Home: React.FC<HomeProps> = ({ currentTheme, onThemeChange }) => {
 
   const handleSwipe = (id: number, dir: 'left' | 'right') => {
     setSwipeDirection(dir);
+    setIsActionTrayOpen(false);
     
     if (dir === 'right') {
       addHeart();
@@ -63,11 +66,31 @@ export const Home: React.FC<HomeProps> = ({ currentTheme, onThemeChange }) => {
       exit={{ opacity: 0 }}
       className="flex flex-col h-full w-full bg-background text-text-primary overflow-hidden relative"
     >
-      <HomeHeader currentTheme={currentTheme} onThemeChange={onThemeChange} />
+      <div className="hidden sm:block">
+        <HomeHeader currentTheme={currentTheme} onThemeChange={onThemeChange} />
+      </div>
 
-      {/* Card Stack Workspace */}
-      <div className="flex-1 relative flex flex-col items-center justify-center w-full max-w-md mx-auto px-4 my-2 select-none">
-        <div className="relative w-full aspect-[3/4.2] max-h-[580px] sm:max-h-[620px]">
+      <AnimatePresence>
+        {isActionTrayOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.18 }}
+            className="sm:hidden absolute inset-x-0 top-0 z-40"
+          >
+            <HomeHeader currentTheme={currentTheme} onThemeChange={onThemeChange} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* On compact screens, reading takes the whole viewport. Swiping remains the primary control. */}
+      <div
+        className={`flex-1 relative flex min-h-0 w-full max-w-md mx-auto px-2 py-2 transition-[padding] duration-200 sm:items-center sm:justify-center sm:px-4 sm:py-0 sm:my-2 select-none ${
+          isActionTrayOpen ? 'pt-[4.75rem]' : ''
+        }`}
+      >
+        <div className="relative h-full w-full sm:aspect-[3/4.2] sm:max-h-[620px]">
           <AnimatePresence>
             {activeCards.map((poem, index) => {
               const isFront = index === 0;
@@ -78,6 +101,7 @@ export const Home: React.FC<HomeProps> = ({ currentTheme, onThemeChange }) => {
                   isFront={isFront}
                   swipeResult={isFront ? swipeDirection : null}
                   onSwipe={(dir) => handleSwipe(poem.id, dir)}
+                  onTap={() => isFront && setIsActionTrayOpen((isOpen) => !isOpen)}
                 />
               );
             })}
@@ -85,14 +109,58 @@ export const Home: React.FC<HomeProps> = ({ currentTheme, onThemeChange }) => {
         </div>
       </div>
 
-      <ActionButtons 
-        onSwipeLeft={() => handleManualSwipe('left')}
-        onSwipeRight={() => handleManualSwipe('right')}
-        onShare={() => setIsShareOpen(true)}
-        disabled={cards.length === 0}
-        hearts={hearts}
-        onHeartComplete={removeHeart}
-      />
+      <div className="hidden sm:block">
+        <ActionButtons
+          onSwipeLeft={() => handleManualSwipe('left')}
+          onSwipeRight={() => handleManualSwipe('right')}
+          onShare={() => setIsShareOpen(true)}
+          disabled={cards.length === 0}
+          hearts={hearts}
+          onHeartComplete={removeHeart}
+        />
+      </div>
+
+      <div className="sm:hidden absolute inset-x-0 bottom-[max(1rem,env(safe-area-inset-bottom))] z-30 flex justify-center pointer-events-none">
+        <motion.div
+          layout
+          className="pointer-events-auto flex items-center gap-2 rounded-full border border-card-border bg-surface/92 p-1.5 shadow-card"
+        >
+          <button
+            onClick={() => handleManualSwipe('left')}
+            disabled={cards.length === 0}
+            aria-label="跳过这首诗"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-text-secondary transition-transform active:scale-90 disabled:opacity-30"
+          >
+            <X size={22} strokeWidth={2.2} />
+          </button>
+
+          <AnimatePresence initial={false}>
+            {isActionTrayOpen && (
+              <motion.button
+                initial={{ opacity: 0, scale: 0.75, width: 0 }}
+                animate={{ opacity: 1, scale: 1, width: 44 }}
+                exit={{ opacity: 0, scale: 0.75, width: 0 }}
+                transition={{ duration: 0.18 }}
+                onClick={() => setIsShareOpen(true)}
+                disabled={cards.length === 0}
+                aria-label="分享这首诗"
+                className="flex h-11 shrink-0 items-center justify-center overflow-hidden rounded-full border border-card-border text-text-secondary transition-transform active:scale-90 disabled:opacity-30"
+              >
+                <Share2 size={20} />
+              </motion.button>
+            )}
+          </AnimatePresence>
+
+          <button
+            onClick={() => handleManualSwipe('right')}
+            disabled={cards.length === 0}
+            aria-label="喜欢这首诗"
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-primary text-background transition-transform active:scale-90 disabled:opacity-30"
+          >
+            <Heart size={21} fill="currentColor" strokeWidth={1.2} />
+          </button>
+        </motion.div>
+      </div>
 
       {/* Share Modal */}
       {cards.length > 0 && (

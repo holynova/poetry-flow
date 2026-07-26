@@ -1,18 +1,22 @@
-import React, { useRef, useEffect } from 'react';
-import { motion, useMotionValue, useTransform, useAnimation, type PanInfo } from 'framer-motion';
+import React, { useRef, useEffect, useState, type CSSProperties } from 'react';
+import { AnimatePresence, motion, useMotionValue, useTransform, useAnimation, type PanInfo } from 'framer-motion';
 import type { Poem } from '../types';
 
 interface SwipeCardProps {
   poem: Poem;
   onSwipe: (direction: 'left' | 'right') => void;
+  onTap: () => void;
   isFront: boolean;
   swipeResult?: 'left' | 'right' | null;
 }
 
-export const SwipeCard: React.FC<SwipeCardProps> = ({ poem, onSwipe, isFront, swipeResult }) => {
+const SWIPE_HINT_STORAGE_KEY = 'poetry-flow-swipe-hint-count';
+
+export const SwipeCard: React.FC<SwipeCardProps> = ({ poem, onSwipe, onTap, isFront, swipeResult }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const controls = useAnimation();
   const x = useMotionValue(0);
+  const [showSwipeHint, setShowSwipeHint] = useState(false);
 
   // Rotation based on horizontal swipe distance
   const rotate = useTransform(x, [-200, 200], [-12, 12]);
@@ -27,6 +31,12 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ poem, onSwipe, isFront, sw
   // Opacity indicators for overlays
   const likeOpacity = useTransform(x, [20, 100], [0, 1]);
   const nopeOpacity = useTransform(x, [-20, -100], [0, 1]);
+  const longestLineLength = Math.max(...poem.lines.map((line) => Array.from(line).length));
+  const readingStyle = {
+    fontSize: `min(15px, max(12px, calc((100vw - 40px) / ${longestLineLength})))`,
+  } as CSSProperties;
+
+  const topic = poem.tags[1] ?? poem.title;
 
   const handleDragEnd = async (_: any, info: PanInfo) => {
     const threshold = 100;
@@ -58,6 +68,21 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ poem, onSwipe, isFront, sw
     }
   }, [isFront, swipeResult, controls]);
 
+  useEffect(() => {
+    if (!isFront) {
+      setShowSwipeHint(false);
+      return;
+    }
+
+    const seenCount = Number(localStorage.getItem(SWIPE_HINT_STORAGE_KEY) ?? 0);
+    if (seenCount >= 3) return;
+
+    setShowSwipeHint(true);
+    localStorage.setItem(SWIPE_HINT_STORAGE_KEY, String(seenCount + 1));
+    const timer = window.setTimeout(() => setShowSwipeHint(false), 3600);
+    return () => window.clearTimeout(timer);
+  }, [isFront, poem.id]);
+
   return (
     <motion.div
       ref={cardRef}
@@ -74,13 +99,14 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ poem, onSwipe, isFront, sw
       dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
       dragElastic={0.6}
       onDragEnd={handleDragEnd}
+      onTap={onTap}
       animate={controls}
       initial={isFront ? { scale: 1 } : { scale: 0.95, y: 12 }}
       whileTap={isFront ? { cursor: 'grabbing', scale: 1.01 } : {}}
       className="absolute inset-0 flex items-center justify-center select-none"
     >
       <div 
-        className="relative w-full h-full rounded-[32px] overflow-hidden border border-card-border bg-surface shadow-card flex flex-col transition-all duration-300"
+        className="relative w-full h-full rounded-[24px] sm:rounded-[32px] overflow-hidden border border-card-border bg-surface shadow-card flex flex-col transition-all duration-300"
       >
         {/* Swipe Feedback Overlay */}
         <motion.div 
@@ -93,13 +119,13 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ poem, onSwipe, isFront, sw
           <>
             <motion.div 
               style={{ opacity: likeOpacity }}
-              className="absolute top-8 right-8 z-30 transform rotate-12 border border-primary text-primary bg-surface/90 rounded-lg px-3.5 py-1.5 font-sans font-bold text-sm tracking-widest"
+              className="hidden sm:block absolute top-8 right-8 z-30 transform rotate-12 border border-primary text-primary bg-surface/90 rounded-lg px-3.5 py-1.5 font-sans font-bold text-sm tracking-widest"
             >
               喜欢
             </motion.div>
             <motion.div 
               style={{ opacity: nopeOpacity }}
-              className="absolute top-8 left-8 z-30 transform -rotate-12 border border-danger text-danger bg-surface/90 rounded-lg px-3.5 py-1.5 font-sans font-bold text-sm tracking-widest"
+              className="hidden sm:block absolute top-8 left-8 z-30 transform -rotate-12 border border-danger text-danger bg-surface/90 rounded-lg px-3.5 py-1.5 font-sans font-bold text-sm tracking-widest"
             >
               跳过
             </motion.div>
@@ -107,45 +133,53 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ poem, onSwipe, isFront, sw
         )}
 
         {/* Card Content Wrapper */}
-        <div className="relative z-20 flex-1 flex flex-col p-8 sm:p-10 justify-between items-center text-center">
-          {/* Header metadata */}
-          <div className="w-full flex justify-between items-center opacity-60 text-[10px] tracking-widest font-sans text-text-secondary mt-1">
-            <span>POETRY FLOW</span>
-            <div className="flex gap-1.5">
-              {poem.tags.map(t => (
-                <span key={t} className="px-2 py-0.5 rounded-md bg-primary-light text-primary font-bold text-[9px]">{t}</span>
-              ))}
+        <div className="relative z-20 flex min-h-0 flex-1 flex-col items-center px-3 py-4 text-center sm:p-10">
+          <div className="w-full shrink-0 space-y-2 pt-0.5 text-[8px] font-sans tracking-[0.18em] text-text-secondary sm:mt-1 sm:text-[10px] sm:tracking-widest">
+            <div className="flex items-center justify-between gap-3 opacity-75">
+              <span className="font-semibold">POETRY FLOW</span>
+              <span className="max-w-[58%] shrink-0 truncate text-right">{topic}</span>
+            </div>
+            <div aria-hidden="true" className="flex items-center gap-2 opacity-55">
+              <span className="h-px w-8 bg-primary/50 sm:w-12" />
+              <span className="h-1 w-1 rounded-full bg-primary" />
+              <span className="h-px flex-1 bg-card-border" />
             </div>
           </div>
 
           {/* Poem Text Panel */}
-          <div className="flex-1 flex flex-col justify-center items-center gap-6 my-4 w-full">
-            <div className="space-y-1.5">
-              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-text-primary tracking-wider">
+          <div className="flex min-h-0 flex-1 flex-col justify-center items-center gap-3 sm:gap-6 sm:my-4 w-full">
+            <div className="shrink-0 space-y-1.5">
+              <h2 className="text-lg leading-tight sm:text-3xl font-serif font-bold text-primary tracking-wider">
                 《{poem.title}》
               </h2>
-              <p className="text-text-secondary text-[11px] font-sans tracking-widest uppercase opacity-70">
-                {poem.author}
-              </p>
             </div>
 
-            {/* Custom Zen styled divider */}
-            <div className="w-10 h-[1.5px] bg-primary/20 rounded-full"></div>
+            <div aria-hidden="true" className="h-px w-10 rounded-full bg-primary/30 sm:w-14" />
 
-            {/* Main Poem lines */}
-            <div className="space-y-2.5 sm:space-y-3.5 font-serif font-medium text-text-primary text-base sm:text-[17px] leading-relaxed tracking-widest select-text">
+            <div
+              style={readingStyle}
+              className="shrink-0 space-y-1 sm:space-y-3.5 font-serif font-medium text-text-primary leading-[1.62] sm:leading-relaxed tracking-normal sm:tracking-widest select-text"
+            >
               {poem.lines.map((line, idx) => (
-                <p key={idx} className="transition-all duration-200 hover:text-primary">
+                <p key={idx} className="whitespace-nowrap transition-colors duration-200 hover:text-primary">
                   {line}
                 </p>
               ))}
             </div>
           </div>
 
-          {/* Footer instruction hint */}
-          <div className="w-full opacity-40 text-[9px] tracking-widest font-sans text-text-secondary">
-            向右滑动喜欢 · 向左滑动跳过
-          </div>
+          <AnimatePresence>
+            {isFront && showSwipeHint && (
+              <motion.div
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 0.52, y: 0 }}
+                exit={{ opacity: 0, y: 3 }}
+                className="absolute bottom-20 left-0 right-0 z-30 text-center text-[9px] font-sans tracking-widest text-text-secondary sm:bottom-6"
+              >
+                向右滑动喜欢 · 向左滑动跳过
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </motion.div>

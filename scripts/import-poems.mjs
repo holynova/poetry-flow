@@ -28,17 +28,37 @@ const cleanLines = (body) => body
   .map((line) => line.replace(/\s+$/g, '').trim())
   .filter(Boolean);
 
+const messageText = (message) => (message?.content?.parts ?? [])
+  .filter((part) => typeof part === 'string')
+  .join('\n')
+  .replace(/\s+/g, ' ')
+  .trim();
+
+const findPrompt = (messageId, mapping) => {
+  let currentId = mapping[messageId]?.parent;
+  while (currentId) {
+    const node = mapping[currentId];
+    const message = node?.message;
+    if (message?.author?.role === 'user') return messageText(message);
+    currentId = node?.parent;
+  }
+
+  return '';
+};
+
 const extractPoems = (conversation, source) => {
-  const messages = Object.values(conversation.mapping ?? {})
-    .map((node) => node?.message)
-    .filter((message) => message?.author?.role === 'assistant')
-    .sort((left, right) => (left.create_time ?? 0) - (right.create_time ?? 0));
+  const mapping = conversation.mapping ?? {};
+  const messages = Object.entries(mapping)
+    .map(([id, node]) => ({ id, message: node?.message }))
+    .filter(({ message }) => message?.author?.role === 'assistant')
+    .sort((left, right) => (left.message.create_time ?? 0) - (right.message.create_time ?? 0));
 
   const poems = [];
-  for (const message of messages) {
+  for (const { id, message } of messages) {
     const content = (message.content?.parts ?? [])
       .filter((part) => typeof part === 'string')
       .join('\n');
+    const topic = findPrompt(id, mapping);
 
     for (const match of content.matchAll(titlePattern)) {
       const title = match[1].trim();
@@ -47,7 +67,7 @@ const extractPoems = (conversation, source) => {
       // A title alone is not a poem. This also avoids importing prose that
       // happens to quote a book or poem title in a conversation response.
       if (title && lines.length >= 2) {
-        poems.push({ title, lines, source });
+        poems.push({ title, lines, source, topic });
       }
     }
   }
@@ -75,9 +95,9 @@ for (const poem of extracted) {
   poems.push({
     id: poems.length + 1,
     title: poem.title,
-    author: '对话归档',
+    author: poem.source,
     lines: poem.lines,
-    tags: [poem.source],
+    tags: [poem.source, poem.topic].filter(Boolean),
   });
 }
 
