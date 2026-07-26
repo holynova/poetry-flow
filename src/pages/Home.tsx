@@ -18,28 +18,15 @@ export const Home: React.FC<HomeProps> = ({ currentTheme, onThemeChange }) => {
   const { cards, recycleCard } = useDeck();
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
   const { recordAction } = usePoemStats();
-  const [hearts, setHearts] = useState<number[]>([]);
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [isActionTrayOpen, setIsActionTrayOpen] = useState(false);
 
   // Show stack effect by rendering top 2 cards
   const activeCards = cards.slice(0, 2);
 
-  const addHeart = () => {
-    setHearts((prev) => [...prev, Date.now()]);
-  };
-
-  const removeHeart = (id: number) => {
-    setHearts((prev) => prev.filter((h) => h !== id));
-  };
-
   const handleSwipe = (id: number, dir: 'left' | 'right') => {
     setSwipeDirection(dir);
     setIsActionTrayOpen(false);
-    
-    if (dir === 'right') {
-      addHeart();
-    }
 
     // Delay deck updates slightly to allow swipe translation animation to finish
     setTimeout(() => {
@@ -115,8 +102,6 @@ export const Home: React.FC<HomeProps> = ({ currentTheme, onThemeChange }) => {
           onSwipeRight={() => handleManualSwipe('right')}
           onShare={() => setIsShareOpen(true)}
           disabled={cards.length === 0}
-          hearts={hearts}
-          onHeartComplete={removeHeart}
         />
       </div>
 
@@ -129,7 +114,7 @@ export const Home: React.FC<HomeProps> = ({ currentTheme, onThemeChange }) => {
             onClick={() => handleManualSwipe('left')}
             disabled={cards.length === 0}
             aria-label="跳过这首诗"
-            className="flex h-11 w-11 items-center justify-center rounded-full text-text-secondary transition-transform active:scale-90 disabled:opacity-30"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-text-secondary disabled:opacity-30"
           >
             <X size={22} strokeWidth={2.2} />
           </button>
@@ -144,7 +129,7 @@ export const Home: React.FC<HomeProps> = ({ currentTheme, onThemeChange }) => {
                 onClick={() => setIsShareOpen(true)}
                 disabled={cards.length === 0}
                 aria-label="分享这首诗"
-                className="flex h-11 shrink-0 items-center justify-center overflow-hidden rounded-full border border-card-border text-text-secondary transition-transform active:scale-90 disabled:opacity-30"
+                className="flex h-11 shrink-0 items-center justify-center overflow-hidden rounded-full border border-card-border text-text-secondary disabled:opacity-30"
               >
                 <Share2 size={20} />
               </motion.button>
@@ -155,7 +140,7 @@ export const Home: React.FC<HomeProps> = ({ currentTheme, onThemeChange }) => {
             onClick={() => handleManualSwipe('right')}
             disabled={cards.length === 0}
             aria-label="喜欢这首诗"
-            className="flex h-11 w-11 items-center justify-center rounded-full bg-primary text-background transition-transform active:scale-90 disabled:opacity-30"
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-primary text-background disabled:opacity-30"
           >
             <Heart size={21} fill="currentColor" strokeWidth={1.2} />
           </button>

@@ -32,8 +32,9 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ poem, onSwipe, onTap, isFr
   const likeOpacity = useTransform(x, [20, 100], [0, 1]);
   const nopeOpacity = useTransform(x, [-20, -100], [0, 1]);
   const longestLineLength = Math.max(...poem.lines.map((line) => Array.from(line).length));
+  const readingSizeCap = poem.lines.length <= 4 ? 22 : poem.lines.length <= 7 ? 20 : 18;
   const readingStyle = {
-    fontSize: `min(15px, max(12px, calc((100vw - 40px) / ${longestLineLength})))`,
+    fontSize: `min(${readingSizeCap}px, max(12px, calc((100vw - 40px) / ${longestLineLength})))`,
   } as CSSProperties;
 
   const topic = poem.tags[1] ?? poem.title;
@@ -134,7 +135,7 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ poem, onSwipe, onTap, isFr
 
         {/* Card Content Wrapper */}
         <div className="relative z-20 flex min-h-0 flex-1 flex-col items-center px-3 py-4 text-center sm:p-10">
-          <div className="w-full shrink-0 space-y-2 pt-0.5 text-[8px] font-sans tracking-[0.18em] text-text-secondary sm:mt-1 sm:text-[10px] sm:tracking-widest">
+          <div className="w-full shrink-0 space-y-2 pt-0.5 text-[9px] font-sans tracking-[0.18em] text-text-secondary sm:mt-1 sm:text-[11px] sm:tracking-widest">
             <div className="flex items-center justify-between gap-3 opacity-75">
               <span className="font-semibold">POETRY FLOW</span>
               <span className="max-w-[58%] shrink-0 truncate text-right">{topic}</span>
@@ -147,9 +148,9 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ poem, onSwipe, onTap, isFr
           </div>
 
           {/* Poem Text Panel */}
-          <div className="flex min-h-0 flex-1 flex-col justify-center items-center gap-3 sm:gap-6 sm:my-4 w-full">
+          <div className="flex min-h-0 flex-1 flex-col justify-center items-center gap-3 sm:gap-7 sm:my-4 w-full">
             <div className="shrink-0 space-y-1.5">
-              <h2 className="text-lg leading-tight sm:text-3xl font-serif font-bold text-primary tracking-wider">
+              <h2 className="text-xl leading-tight sm:text-[34px] font-serif font-bold text-primary tracking-wider">
                 《{poem.title}》
               </h2>
             </div>
@@ -158,7 +159,7 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ poem, onSwipe, onTap, isFr
 
             <div
               style={readingStyle}
-              className="shrink-0 space-y-1 sm:space-y-3.5 font-serif font-medium text-text-primary leading-[1.62] sm:leading-relaxed tracking-normal sm:tracking-widest select-text"
+              className="shrink-0 space-y-1 sm:space-y-2 font-serif font-medium text-text-primary leading-[1.62] sm:leading-relaxed tracking-normal sm:tracking-widest select-text"
             >
               {poem.lines.map((line, idx) => (
                 <p key={idx} className="whitespace-nowrap transition-colors duration-200 hover:text-primary">

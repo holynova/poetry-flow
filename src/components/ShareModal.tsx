@@ -19,6 +19,8 @@ export const ShareModal: React.FC<ShareModalProps> = ({ poem, isOpen, onClose, t
   const posterRef = useRef<HTMLDivElement>(null);
   
   const projectUrl = 'https://holynova.github.io/poetry-flow/';
+  const topic = poem.tags[1] ?? poem.title;
+  const shareReadingSize = poem.lines.length <= 4 ? 'text-[17px]' : poem.lines.length <= 7 ? 'text-[16px]' : 'text-[15px]';
 
   // Generate QR code on mount or when theme changes to ensure readable colors
   useEffect(() => {
@@ -107,26 +109,28 @@ export const ShareModal: React.FC<ShareModalProps> = ({ poem, isOpen, onClose, t
                 className="w-full bg-surface p-8 flex flex-col justify-between items-center text-center relative z-10"
                 style={{ minHeight: '440px' }}
               >
-                {/* Header Meta */}
-                <div className="w-full flex justify-between items-center opacity-65 text-[9px] tracking-widest font-sans text-text-secondary mb-4">
-                  <span>POETRY FLOW</span>
-                  <span>{poem.tags.join(' · ')}</span>
+                <div className="w-full shrink-0 space-y-2 pt-0.5 text-[9px] font-sans tracking-[0.18em] text-text-secondary">
+                  <div className="flex items-center justify-between gap-3 opacity-75">
+                    <span className="font-semibold">POETRY FLOW</span>
+                    <span className="max-w-[58%] shrink-0 truncate text-right">{topic}</span>
+                  </div>
+                  <div aria-hidden="true" className="flex items-center gap-2 opacity-55">
+                    <span className="h-px w-10 bg-primary/50" />
+                    <span className="h-1 w-1 rounded-full bg-primary" />
+                    <span className="h-px flex-1 bg-card-border" />
+                  </div>
                 </div>
 
-                {/* Poem Body */}
-                <div className="flex-1 flex flex-col justify-center items-center gap-5 my-3 w-full">
-                  <div className="space-y-1">
-                    <h2 className="text-2xl font-serif font-bold text-text-primary tracking-wider">
+                <div className="flex-1 flex flex-col justify-center items-center gap-4 my-3 w-full">
+                  <div>
+                    <h2 className="text-[27px] font-serif font-bold text-primary tracking-wider">
                       《{poem.title}》
                     </h2>
-                    <p className="text-text-secondary text-[10px] font-sans tracking-widest uppercase opacity-70">
-                      {poem.author}
-                    </p>
                   </div>
 
-                  <div className="w-8 h-[1.5px] bg-primary/20 rounded-full"></div>
+                  <div aria-hidden="true" className="w-12 h-px bg-primary/30 rounded-full"></div>
 
-                  <div className="space-y-2.5 font-serif font-medium text-text-primary text-[15px] leading-relaxed tracking-widest">
+                  <div className={`space-y-2 font-serif font-medium text-text-primary ${shareReadingSize} leading-relaxed tracking-widest`}>
                     {poem.lines.map((line, idx) => (
                       <p key={idx}>{line}</p>
                     ))}
