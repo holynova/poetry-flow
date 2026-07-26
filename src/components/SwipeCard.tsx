@@ -32,7 +32,7 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ poem, onSwipe, onTap, isFr
   const likeOpacity = useTransform(x, [20, 100], [0, 1]);
   const nopeOpacity = useTransform(x, [-20, -100], [0, 1]);
   const longestLineLength = Math.max(...poem.lines.map((line) => Array.from(line).length));
-  const readingSizeCap = poem.lines.length <= 4 ? 22 : poem.lines.length <= 7 ? 20 : 18;
+  const readingSizeCap = poem.lines.length <= 4 ? 22 : poem.lines.length <= 7 ? 20 : 16;
   const readingStyle = {
     fontSize: `min(${readingSizeCap}px, max(12px, calc((100vw - 40px) / ${longestLineLength})))`,
   } as CSSProperties;
@@ -148,7 +148,7 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ poem, onSwipe, onTap, isFr
           </div>
 
           {/* Poem Text Panel */}
-          <div className="flex min-h-0 flex-1 flex-col justify-center items-center gap-3 sm:gap-7 sm:my-4 w-full">
+          <div className="flex min-h-0 flex-1 flex-col justify-start items-center gap-3 pt-10 sm:gap-6 sm:pt-7 w-full">
             <div className="shrink-0 space-y-1.5">
               <h2 className="text-xl leading-tight sm:text-[34px] font-serif font-bold text-primary tracking-wider">
                 {poem.title}

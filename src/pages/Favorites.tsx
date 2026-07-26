@@ -159,7 +159,7 @@ export const Favorites: React.FC = () => {
               >
                 <X size={18} />
               </button>
-              <div className="relative z-10 flex-1 flex flex-col justify-center items-center gap-6 my-6 w-full">
+              <div className="relative z-10 flex-1 flex flex-col justify-start items-center gap-6 pt-10 pb-6 w-full">
                 <div className="space-y-1">
                   <h2 className="text-2xl font-serif font-bold text-text-primary tracking-wide">{selectedPoem.title}</h2>
                   <p className="text-text-secondary text-xs tracking-wider uppercase opacity-70">{selectedPoem.author}</p>

@@ -121,7 +121,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({ poem, isOpen, onClose, t
                   </div>
                 </div>
 
-                <div className="flex-1 flex flex-col justify-center items-center gap-4 my-3 w-full">
+                <div className="flex-1 flex flex-col justify-start items-center gap-4 pt-8 pb-3 w-full">
                   <div>
                     <h2 className="text-[27px] font-serif font-bold text-primary tracking-wider">
                       {poem.title}
