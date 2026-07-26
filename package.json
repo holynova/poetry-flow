@@ -1,12 +1,13 @@
 {
   "name": "poetry-flow",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
+    "import-poems": "node scripts/import-poems.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
