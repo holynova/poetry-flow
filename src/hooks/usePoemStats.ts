@@ -19,9 +19,8 @@ export const usePoemStats = () => {
   }, []);
 
   useEffect(() => {
-    if (actions.length > 0) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(actions));
-    }
+    if (actions.length > 0) localStorage.setItem(STORAGE_KEY, JSON.stringify(actions));
+    else localStorage.removeItem(STORAGE_KEY);
   }, [actions]);
 
   const recordAction = (poemId: number, action: 'like' | 'dislike') => {
@@ -31,6 +30,11 @@ export const usePoemStats = () => {
       timestamp: Date.now(),
     };
     setActions((prev) => [...prev, newAction]);
+    return newAction;
+  };
+
+  const undoAction = (actionToUndo: UserAction) => {
+    setActions((prev) => prev.filter((action) => action.timestamp !== actionToUndo.timestamp));
   };
 
   const getStats = () => {
@@ -88,17 +92,11 @@ export const usePoemStats = () => {
 
   const removeLike = (poemId: number) => {
     setActions((prev) => prev.filter((a) => !(a.poemId === poemId && a.action === 'like')));
-    // If the storage becomes empty, we clean localStorage
-    const remaining = actions.filter((a) => !(a.poemId === poemId && a.action === 'like'));
-    if (remaining.length === 0) {
-      localStorage.removeItem(STORAGE_KEY);
-    } else {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(remaining));
-    }
   };
 
   return {
     recordAction,
+    undoAction,
     getStats,
     getLikedPoems,
     removeLike,

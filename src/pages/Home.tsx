@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import SwipeCard from '../components/SwipeCard';
 import { usePoemStats } from '../hooks/usePoemStats';
@@ -6,8 +6,8 @@ import { useDeck } from '../hooks/useDeck';
 import { HomeHeader } from '../components/HomeHeader';
 import { ActionButtons } from '../components/ActionButtons';
 import { ShareModal } from '../components/ShareModal';
-import { Heart, Share2, X } from 'lucide-react';
-import type { ThemeId } from '../types';
+import { Heart, RotateCcw, Share2, X } from 'lucide-react';
+import type { ThemeId, UserAction } from '../types';
 
 interface HomeProps {
   currentTheme: ThemeId;
@@ -15,11 +15,17 @@ interface HomeProps {
 }
 
 export const Home: React.FC<HomeProps> = ({ currentTheme, onThemeChange }) => {
-  const { cards, recycleCard } = useDeck();
+  const { cards, recycleCard, restoreCard } = useDeck();
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
-  const { recordAction } = usePoemStats();
+  const { recordAction, undoAction } = usePoemStats();
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [isActionTrayOpen, setIsActionTrayOpen] = useState(false);
+  const [recentAction, setRecentAction] = useState<UserAction | null>(null);
+  const undoTimer = useRef<number | null>(null);
+
+  useEffect(() => () => {
+    if (undoTimer.current) window.clearTimeout(undoTimer.current);
+  }, []);
 
   // Show stack effect by rendering top 2 cards
   const activeCards = cards.slice(0, 2);
@@ -33,8 +39,11 @@ export const Home: React.FC<HomeProps> = ({ currentTheme, onThemeChange }) => {
       const card = cards.find(c => c.id === id);
       if (card) {
         const action = dir === 'right' ? 'like' : 'dislike';
-        recordAction(card.id, action);
+        const recordedAction = recordAction(card.id, action);
         recycleCard(card.id);
+        if (undoTimer.current) window.clearTimeout(undoTimer.current);
+        setRecentAction(recordedAction);
+        undoTimer.current = window.setTimeout(() => setRecentAction(null), 4200);
       }
       setSwipeDirection(null);
     }, 220);
@@ -44,6 +53,14 @@ export const Home: React.FC<HomeProps> = ({ currentTheme, onThemeChange }) => {
     if (cards.length === 0) return;
     const topCard = cards[0];
     handleSwipe(topCard.id, direction);
+  };
+
+  const handleUndo = () => {
+    if (!recentAction) return;
+    if (undoTimer.current) window.clearTimeout(undoTimer.current);
+    undoAction(recentAction);
+    restoreCard(recentAction.poemId);
+    setRecentAction(null);
   };
 
   return (
@@ -74,7 +91,7 @@ export const Home: React.FC<HomeProps> = ({ currentTheme, onThemeChange }) => {
       {/* On compact screens, reading takes the whole viewport. Swiping remains the primary control. */}
       <div
         className={`flex-1 relative flex min-h-0 w-full max-w-md mx-auto px-2 py-2 transition-[padding] duration-200 sm:items-center sm:justify-center sm:px-4 sm:py-0 sm:my-2 select-none ${
-          isActionTrayOpen ? 'pt-[4.75rem]' : ''
+          isActionTrayOpen ? 'pt-[4.75rem] pb-[5.5rem] sm:pt-0 sm:pb-0' : 'pb-[5.5rem] sm:pb-0'
         }`}
       >
         <div className="relative h-full w-full sm:aspect-[3/4.2] sm:max-h-[620px]">
@@ -86,6 +103,7 @@ export const Home: React.FC<HomeProps> = ({ currentTheme, onThemeChange }) => {
                   key={poem.id} 
                   poem={poem} 
                   isFront={isFront}
+                  isActionTrayOpen={isActionTrayOpen}
                   swipeResult={isFront ? swipeDirection : null}
                   onSwipe={(dir) => handleSwipe(poem.id, dir)}
                   onTap={() => isFront && setIsActionTrayOpen((isOpen) => !isOpen)}
@@ -107,7 +125,7 @@ export const Home: React.FC<HomeProps> = ({ currentTheme, onThemeChange }) => {
 
       <div className="sm:hidden absolute inset-x-0 bottom-[max(1rem,env(safe-area-inset-bottom))] z-30 flex justify-center pointer-events-none">
         <motion.div
-          className="pointer-events-auto flex items-center gap-2 rounded-full border border-card-border bg-surface/92 p-1.5 shadow-card"
+          className="pointer-events-auto flex items-center gap-2 rounded-full border border-card-border bg-surface/96 p-1.5 shadow-sm"
         >
           <button
             onClick={() => handleManualSwipe('left')}
@@ -145,6 +163,30 @@ export const Home: React.FC<HomeProps> = ({ currentTheme, onThemeChange }) => {
           </button>
         </motion.div>
       </div>
+
+      <AnimatePresence>
+        {recentAction && (
+          <motion.div
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 4 }}
+            transition={{ duration: 0.16, ease: 'easeOut' }}
+            role="status"
+            className="absolute inset-x-0 bottom-[5.25rem] z-30 flex justify-center px-4 pointer-events-none sm:bottom-24"
+          >
+            <div className="pointer-events-auto flex items-center gap-3 border border-card-border bg-surface/96 px-3 py-2 text-xs font-sans text-text-secondary shadow-sm">
+              <span>{recentAction.action === 'like' ? '已喜欢' : '已跳过'}</span>
+              <button
+                onClick={handleUndo}
+                className="inline-flex items-center gap-1 font-semibold text-primary transition-colors hover:text-text-primary"
+              >
+                <RotateCcw size={14} />
+                撤销
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Share Modal */}
       {cards.length > 0 && (

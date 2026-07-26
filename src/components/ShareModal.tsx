@@ -4,6 +4,7 @@ import { X, Download, Share2, ToggleLeft, ToggleRight } from 'lucide-react';
 import QRCode from 'qrcode';
 import { toPng } from 'html-to-image';
 import type { Poem, ThemeId } from '../types';
+import { getPoemTypography, getTopicLabel } from '../utils/poemTypography';
 
 interface ShareModalProps {
   poem: Poem;
@@ -16,15 +17,19 @@ export const ShareModal: React.FC<ShareModalProps> = ({ poem, isOpen, onClose, t
   const [showMeta, setShowMeta] = useState(true);
   const [qrCodeUrl, setQrCodeUrl] = useState('');
   const [generating, setGenerating] = useState(false);
+  const [generationError, setGenerationError] = useState('');
   const posterRef = useRef<HTMLDivElement>(null);
   
   const projectUrl = 'https://holynova.github.io/poetry-flow/';
-  const topic = poem.tags[1] ?? poem.title;
-  const shareReadingSize = poem.lines.length <= 4 ? 'text-[17px]' : poem.lines.length <= 7 ? 'text-[16px]' : 'text-[15px]';
+  const topic = getTopicLabel(poem);
+  const { bodyGapClass, contentGapClass, isLong, readingStyle, titleSize } = getPoemTypography(poem, 'share');
 
   // Generate QR code on mount or when theme changes to ensure readable colors
   useEffect(() => {
     if (!isOpen) return;
+
+    setShowMeta(!isLong);
+    setGenerationError('');
 
     const qrColorDark = theme === 'dark' ? '#E2ECE7' : '#1F2421';
     const qrColorLight = theme === 'dark' ? '#1B201D' : '#FFFFFF';
@@ -39,11 +44,12 @@ export const ShareModal: React.FC<ShareModalProps> = ({ poem, isOpen, onClose, t
     })
       .then((url) => setQrCodeUrl(url))
       .catch((err) => console.error('Failed to generate QR code', err));
-  }, [isOpen, theme]);
+  }, [isLong, isOpen, theme]);
 
   const handleDownload = async () => {
     if (!posterRef.current) return;
     setGenerating(true);
+    setGenerationError('');
     
     try {
       // Small timeout to allow state updates or images to load fully
@@ -64,7 +70,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({ poem, isOpen, onClose, t
       link.click();
     } catch (error) {
       console.error('Failed to generate poster image', error);
-      alert('生成图片失败，请稍后重试');
+      setGenerationError('图片未能生成，请重新尝试。');
     } finally {
       setGenerating(false);
     }
@@ -106,13 +112,13 @@ export const ShareModal: React.FC<ShareModalProps> = ({ poem, isOpen, onClose, t
             <div className="w-full rounded-[28px] overflow-hidden border border-card-border shadow-2xl">
               <div 
                 ref={posterRef}
-                className="w-full bg-surface p-8 flex flex-col justify-between items-center text-center relative z-10"
+                className="w-full bg-surface p-6 sm:p-8 flex flex-col justify-between items-stretch text-left relative z-10"
                 style={{ minHeight: '440px' }}
               >
-                <div className="w-full shrink-0 space-y-2 pt-0.5 text-[9px] font-sans tracking-[0.18em] text-text-secondary">
+                <div className="w-full shrink-0 space-y-2 pt-0.5 text-[11px] font-sans tracking-[0.1em] text-text-secondary sm:tracking-[0.14em]">
                   <div className="flex items-center justify-between gap-3 opacity-75">
                     <span className="font-semibold">POETRY FLOW</span>
-                    <span className="max-w-[58%] shrink-0 truncate text-right">{topic}</span>
+                    {topic && <span className="max-w-[58%] shrink-0 whitespace-nowrap text-right">{topic}</span>}
                   </div>
                   <div aria-hidden="true" className="flex items-center gap-2 opacity-55">
                     <span className="h-px w-10 bg-primary/50" />
@@ -121,18 +127,18 @@ export const ShareModal: React.FC<ShareModalProps> = ({ poem, isOpen, onClose, t
                   </div>
                 </div>
 
-                <div className="flex-1 flex flex-col justify-start items-center gap-4 pt-8 pb-3 w-full">
+                <div className={`flex-1 flex flex-col justify-start items-start ${contentGapClass} pt-8 pb-3 w-full`}>
                   <div>
-                    <h2 className="text-[27px] font-serif font-bold text-primary tracking-wider">
+                    <h2 style={{ fontSize: titleSize }} className="font-serif font-bold text-primary tracking-[0.08em]">
                       {poem.title}
                     </h2>
                   </div>
 
-                  <div aria-hidden="true" className="w-12 h-px bg-primary/30 rounded-full"></div>
+                  <div aria-hidden="true" className="w-14 h-px bg-primary/30 rounded-full"></div>
 
-                  <div className={`space-y-2 font-serif font-medium text-text-primary ${shareReadingSize} leading-relaxed tracking-widest`}>
+                  <div style={readingStyle} className={`${bodyGapClass} font-serif font-medium text-text-primary tracking-[0.025em]`}>
                     {poem.lines.map((line, idx) => (
-                      <p key={idx}>{line}</p>
+                      <p key={idx} className="whitespace-nowrap">{line}</p>
                     ))}
                   </div>
                 </div>
@@ -165,15 +171,18 @@ export const ShareModal: React.FC<ShareModalProps> = ({ poem, isOpen, onClose, t
 
             {/* Toggle options & action button panel */}
             <div className="w-full bg-surface/50 border border-card-border rounded-2xl p-4 flex flex-col gap-4">
-              <div 
+              <button
+                type="button"
                 onClick={() => setShowMeta(!showMeta)}
-                className="flex items-center justify-between cursor-pointer select-none text-xs font-semibold text-text-secondary hover:text-text-primary transition-colors"
+                className="flex w-full items-center justify-between text-left text-xs font-semibold text-text-secondary hover:text-text-primary transition-colors"
               >
                 <span>在海报底部显示二维码和项目链接</span>
-                <button className="text-primary">
+                <span className="text-primary" aria-hidden="true">
                   {showMeta ? <ToggleRight size={24} /> : <ToggleLeft size={24} />}
-                </button>
-              </div>
+                </span>
+              </button>
+
+              {generationError && <p role="alert" className="text-xs text-danger">{generationError}</p>}
 
               <button
                 onClick={handleDownload}

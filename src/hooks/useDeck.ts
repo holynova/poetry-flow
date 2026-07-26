@@ -61,7 +61,18 @@ export const useDeck = () => {
     });
   };
 
-  return { cards, recycleCard };
+  const restoreCard = (id: number) => {
+    setCards((prev) => {
+      const cardToRestore = prev.find((card) => card.id === id);
+      if (!cardToRestore) return prev;
+
+      const newCards = [cardToRestore, ...prev.filter((card) => card.id !== id)];
+      localStorage.setItem(STORAGE_KEY_DECK, JSON.stringify(newCards.map((card) => card.id)));
+      return newCards;
+    });
+  };
+
+  return { cards, recycleCard, restoreCard };
 };
 
 function shuffleArray<T>(array: T[]): T[] {

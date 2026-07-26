@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { usePoemStats } from '../hooks/usePoemStats';
 import { ShareModal } from '../components/ShareModal';
 import type { Poem, ThemeId } from '../types';
+import { getPoemTypography, getTopicLabel } from '../utils/poemTypography';
 
 export const Favorites: React.FC = () => {
   const navigate = useNavigate();
@@ -14,6 +15,8 @@ export const Favorites: React.FC = () => {
   const [isShareOpen, setIsShareOpen] = useState(false);
 
   const likedPoems = getLikedPoems();
+  const selectedTypography = selectedPoem ? getPoemTypography(selectedPoem, 'collection') : null;
+  const selectedTopic = selectedPoem ? getTopicLabel(selectedPoem) : '';
 
   const handleDelete = (e: React.MouseEvent, id: number) => {
     e.stopPropagation();
@@ -143,7 +146,7 @@ export const Favorites: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.18, ease: 'easeOut' }}
-              className="relative w-full max-w-md bg-surface border border-card-border rounded-[36px] overflow-hidden shadow-2xl p-8 flex flex-col items-center justify-between text-center min-h-[440px]"
+              className="relative w-full max-w-md bg-surface border border-card-border rounded-[28px] overflow-hidden shadow-2xl p-6 sm:p-8 flex flex-col items-stretch justify-between text-left min-h-[440px]"
               onClick={(e) => e.stopPropagation()}
             >
               <button
@@ -159,20 +162,25 @@ export const Favorites: React.FC = () => {
               >
                 <X size={18} />
               </button>
-              <div className="relative z-10 flex-1 flex flex-col justify-start items-center gap-6 pt-10 pb-6 w-full">
-                <div className="space-y-1">
-                  <h2 className="text-2xl font-serif font-bold text-text-primary tracking-wide">{selectedPoem.title}</h2>
-                  <p className="text-text-secondary text-xs tracking-wider uppercase opacity-70">{selectedPoem.author}</p>
+              <div className="relative z-10 flex-1 flex flex-col justify-start items-start gap-5 pt-8 pb-6 w-full">
+                <div className="w-full shrink-0 space-y-2 text-[11px] font-sans tracking-[0.1em] text-text-secondary">
+                  <div className="flex items-center justify-between gap-3 opacity-75">
+                    <span className="font-semibold">POETRY FLOW</span>
+                    {selectedTopic && <span className="max-w-[58%] whitespace-nowrap text-right">{selectedTopic}</span>}
+                  </div>
+                  <div aria-hidden="true" className="flex items-center gap-2 opacity-55">
+                    <span className="h-px w-8 bg-primary/50" />
+                    <span className="h-1 w-1 rounded-full bg-primary" />
+                    <span className="h-px flex-1 bg-card-border" />
+                  </div>
                 </div>
-                <div className="w-10 h-[1.5px] bg-primary/20 rounded-full"></div>
-                <div className="space-y-3.5 font-serif font-medium text-text-primary text-[16px] leading-loose tracking-widest">
+                <div className={`flex flex-col items-start ${selectedTypography?.contentGapClass ?? 'gap-5'} w-full pt-3`}>
+                  <h2 style={{ fontSize: selectedTypography?.titleSize }} className="font-serif font-bold text-primary tracking-[0.08em]">{selectedPoem.title}</h2>
+                  <div className="w-12 h-px bg-primary/30 rounded-full" />
+                </div>
+                <div style={selectedTypography?.readingStyle} className={`${selectedTypography?.bodyGapClass ?? 'space-y-2'} font-serif font-medium text-text-primary tracking-[0.025em]`}>
                   {selectedPoem.lines.map((line, idx) => <p key={idx}>{line}</p>)}
                 </div>
-              </div>
-              <div className="relative z-10 w-full flex justify-center gap-1.5 opacity-60">
-                {selectedPoem.tags.map((tag) => (
-                  <span key={tag} className="px-2.5 py-0.5 rounded-full bg-primary-light text-primary text-[9px] font-bold tracking-widest">{tag}</span>
-                ))}
               </div>
             </motion.div>
           </motion.div>
