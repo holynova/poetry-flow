@@ -81,10 +81,10 @@ export const ShareModal: React.FC<ShareModalProps> = ({ poem, isOpen, onClose, t
           onClick={onClose}
         >
           <motion.div
-            initial={{ scale: 0.93, y: 15 }}
-            animate={{ scale: 1, y: 0 }}
-            exit={{ scale: 0.93, y: 15 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 220 }}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 15 }}
+            transition={{ duration: 0.18, ease: 'easeOut' }}
             className="w-full max-w-sm flex flex-col items-center gap-4 my-auto"
             onClick={(e) => e.stopPropagation()}
           >
@@ -96,7 +96,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({ poem, isOpen, onClose, t
               </span>
               <button 
                 onClick={onClose}
-                className="p-1.5 rounded-full hover:bg-surface border border-card-border text-text-primary active:scale-95 transition-all"
+                className="p-1.5 rounded-full hover:bg-surface border border-card-border text-text-primary transition-colors"
               >
                 <X size={16} />
               </button>
@@ -124,7 +124,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({ poem, isOpen, onClose, t
                 <div className="flex-1 flex flex-col justify-center items-center gap-4 my-3 w-full">
                   <div>
                     <h2 className="text-[27px] font-serif font-bold text-primary tracking-wider">
-                      《{poem.title}》
+                      {poem.title}
                     </h2>
                   </div>
 
@@ -170,7 +170,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({ poem, isOpen, onClose, t
                 className="flex items-center justify-between cursor-pointer select-none text-xs font-semibold text-text-secondary hover:text-text-primary transition-colors"
               >
                 <span>在海报底部显示二维码和项目链接</span>
-                <button className="text-primary active:scale-95 transition-transform">
+                <button className="text-primary">
                   {showMeta ? <ToggleRight size={24} /> : <ToggleLeft size={24} />}
                 </button>
               </div>
@@ -178,7 +178,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({ poem, isOpen, onClose, t
               <button
                 onClick={handleDownload}
                 disabled={generating}
-                className="w-full py-3 bg-primary text-background font-sans font-bold rounded-xl text-sm tracking-wider flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all disabled:opacity-55 disabled:pointer-events-none shadow-md"
+                className="w-full py-3 bg-primary text-background font-sans font-bold rounded-xl text-sm tracking-wider flex items-center justify-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-55 disabled:pointer-events-none shadow-md"
               >
                 <Download size={18} />
                 {generating ? '正在生成图片...' : '保存高清卡片图片'}

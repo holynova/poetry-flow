@@ -25,7 +25,7 @@ export const Stats: React.FC = () => {
         <div className="relative flex items-center justify-center mb-8 mt-2">
           <button 
             onClick={() => navigate('/')}
-            className="absolute left-0 p-2 text-text-secondary hover:bg-surface/40 rounded-full transition-colors active:scale-95"
+            className="absolute left-0 p-2 text-text-secondary hover:bg-surface/40 rounded-full transition-colors"
           >
             <ArrowLeft size={24} />
           </button>
@@ -44,7 +44,7 @@ export const Stats: React.FC = () => {
             </div>
             <button
               onClick={() => navigate('/')}
-              className="mt-4 px-5 py-2 bg-primary text-background font-sans font-semibold rounded-full text-xs tracking-wider hover:opacity-90 transition-all active:scale-95"
+              className="mt-4 px-5 py-2 bg-primary text-background font-sans font-semibold rounded-full text-xs tracking-wider hover:opacity-90 transition-opacity"
             >
               开始滑动
             </button>
@@ -76,8 +76,8 @@ export const Stats: React.FC = () => {
             {/* Like/Dislike Ratio Pie Chart */}
             {stats.totalSwipes > 0 && (
               <motion.div
-                initial={{ opacity: 0, scale: 0.96 }}
-                animate={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 }}
                 className="bg-surface p-6 rounded-[28px] border border-card-border shadow-sm"
               >

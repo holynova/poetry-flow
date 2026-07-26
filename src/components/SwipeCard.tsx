@@ -50,13 +50,13 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ poem, onSwipe, onTap, isFr
       await controls.start({ x: -500, opacity: 0, transition: { duration: 0.2 } });
       onSwipe('left');
     } else {
-      controls.start({ x: 0, transition: { type: 'spring', stiffness: 300, damping: 20 } });
+      controls.start({ x: 0, transition: { duration: 0.18, ease: 'easeOut' } });
     }
   };
 
   useEffect(() => {
     if (!isFront) {
-      controls.set({ x: 0, opacity: 1, scale: 0.95, y: 12 });
+      controls.set({ x: 0, opacity: 1, y: 12 });
     } else if (swipeResult) {
       const targetX = swipeResult === 'left' ? -500 : 500;
       controls.start({ 
@@ -65,7 +65,7 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ poem, onSwipe, onTap, isFr
         transition: { duration: 0.2 } 
       });
     } else {
-      controls.start({ scale: 1, y: 0, opacity: 1, x: 0 });
+      controls.start({ y: 0, opacity: 1, x: 0 });
     }
   }, [isFront, swipeResult, controls]);
 
@@ -98,12 +98,12 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ poem, onSwipe, onTap, isFr
       }}
       drag={isFront ? 'x' : false}
       dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
-      dragElastic={0.6}
+      dragElastic={0}
       onDragEnd={handleDragEnd}
       onTap={onTap}
       animate={controls}
-      initial={isFront ? { scale: 1 } : { scale: 0.95, y: 12 }}
-      whileTap={isFront ? { cursor: 'grabbing', scale: 1.01 } : {}}
+      initial={isFront ? { opacity: 1 } : { opacity: 1, y: 12 }}
+      whileTap={isFront ? { cursor: 'grabbing' } : {}}
       className="absolute inset-0 flex items-center justify-center select-none"
     >
       <div 
@@ -151,7 +151,7 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ poem, onSwipe, onTap, isFr
           <div className="flex min-h-0 flex-1 flex-col justify-center items-center gap-3 sm:gap-7 sm:my-4 w-full">
             <div className="shrink-0 space-y-1.5">
               <h2 className="text-xl leading-tight sm:text-[34px] font-serif font-bold text-primary tracking-wider">
-                《{poem.title}》
+                {poem.title}
               </h2>
             </div>
 

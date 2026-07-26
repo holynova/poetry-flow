@@ -28,7 +28,7 @@ export const Favorites: React.FC = () => {
         <div className="relative flex items-center justify-center mb-6 mt-2">
           <button
             onClick={() => navigate('/')}
-            className="absolute left-0 p-2 text-text-secondary hover:bg-surface/40 rounded-full transition-colors active:scale-95"
+            className="absolute left-0 p-2 text-text-secondary hover:bg-surface/40 rounded-full transition-colors"
           >
             <ArrowLeft size={24} />
           </button>
@@ -71,7 +71,7 @@ export const Favorites: React.FC = () => {
             </div>
             <button
               onClick={() => navigate('/')}
-              className="mt-4 px-5 py-2 bg-primary text-background font-sans font-semibold rounded-full text-xs tracking-wider hover:opacity-90 transition-all active:scale-95"
+              className="mt-4 px-5 py-2 bg-primary text-background font-sans font-semibold rounded-full text-xs tracking-wider hover:opacity-90 transition-opacity"
             >
               去读诗
             </button>
@@ -82,18 +82,18 @@ export const Favorites: React.FC = () => {
               <div
                 key={poem.id}
                 onClick={() => setSelectedPoem(poem)}
-                className="bg-surface p-4 rounded-2xl flex items-center gap-4 border border-card-border active:scale-[0.99] transition-transform cursor-pointer relative overflow-hidden group shadow-sm"
+                className="bg-surface p-4 rounded-2xl flex items-center gap-4 border border-card-border cursor-pointer relative overflow-hidden group shadow-sm"
               >
                 <div className="w-10 h-10 rounded-full bg-primary-light flex items-center justify-center shrink-0 text-primary">
                   <Bookmark className="fill-current" size={18} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-text-primary font-serif font-bold truncate text-base tracking-wide">《{poem.title}》</p>
+                  <p className="text-text-primary font-serif font-bold truncate text-base tracking-wide">{poem.title}</p>
                   <p className="text-text-secondary text-xs font-sans mt-0.5">— {poem.lines[0]}...</p>
                 </div>
                 <button
                   onClick={(e) => handleDelete(e, poem.id)}
-                  className="p-2 text-text-secondary/50 hover:text-danger hover:bg-danger/10 rounded-full transition-all duration-200 z-10 active:scale-95"
+                  className="p-2 text-text-secondary/50 hover:text-danger hover:bg-danger/10 rounded-full transition-colors duration-200 z-10"
                 >
                   <Trash2 size={16} />
                 </button>
@@ -106,7 +106,7 @@ export const Favorites: React.FC = () => {
               <div
                 key={poem.id}
                 onClick={() => setSelectedPoem(poem)}
-                className="bg-surface p-4 rounded-2xl border border-card-border flex flex-col aspect-square justify-between active:scale-[0.98] transition-transform cursor-pointer relative overflow-hidden shadow-sm"
+                className="bg-surface p-4 rounded-2xl border border-card-border flex flex-col aspect-square justify-between cursor-pointer relative overflow-hidden shadow-sm"
               >
                 <div className="flex justify-between items-center z-10 w-full">
                   <Bookmark size={16} className="text-primary fill-current" />
@@ -118,7 +118,7 @@ export const Favorites: React.FC = () => {
                   </button>
                 </div>
                 <div className="flex-1 flex items-center justify-center text-center my-2 z-10 px-1">
-                  <p className="text-text-primary font-serif font-bold text-[15px] leading-relaxed tracking-wider">《{poem.title}》</p>
+                  <p className="text-text-primary font-serif font-bold text-[15px] leading-relaxed tracking-wider">{poem.title}</p>
                 </div>
                 <p className="text-text-secondary text-[10px] tracking-wider text-center z-10 opacity-70">
                   {poem.lines.length} 行诗 · {poem.tags[0]}
@@ -139,29 +139,29 @@ export const Favorites: React.FC = () => {
             onClick={() => setSelectedPoem(null)}
           >
             <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 220 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.18, ease: 'easeOut' }}
               className="relative w-full max-w-md bg-surface border border-card-border rounded-[36px] overflow-hidden shadow-2xl p-8 flex flex-col items-center justify-between text-center min-h-[440px]"
               onClick={(e) => e.stopPropagation()}
             >
               <button
                 onClick={() => setIsShareOpen(true)}
-                className="absolute top-6 left-6 z-30 p-2 rounded-full bg-background/80 hover:bg-background border border-card-border text-text-primary active:scale-95 transition-all duration-200"
+                className="absolute top-6 left-6 z-30 p-2 rounded-full bg-background/80 hover:bg-background border border-card-border text-text-primary transition-colors duration-200"
                 title="分享这首诗"
               >
                 <Share2 size={18} />
               </button>
               <button
                 onClick={() => { setSelectedPoem(null); setIsShareOpen(false); }}
-                className="absolute top-6 right-6 z-30 p-2 rounded-full bg-background/80 hover:bg-background border border-card-border text-text-primary active:scale-95 transition-all duration-200"
+                className="absolute top-6 right-6 z-30 p-2 rounded-full bg-background/80 hover:bg-background border border-card-border text-text-primary transition-colors duration-200"
               >
                 <X size={18} />
               </button>
               <div className="relative z-10 flex-1 flex flex-col justify-center items-center gap-6 my-6 w-full">
                 <div className="space-y-1">
-                  <h2 className="text-2xl font-serif font-bold text-text-primary tracking-wide">《{selectedPoem.title}》</h2>
+                  <h2 className="text-2xl font-serif font-bold text-text-primary tracking-wide">{selectedPoem.title}</h2>
                   <p className="text-text-secondary text-xs tracking-wider uppercase opacity-70">{selectedPoem.author}</p>
                 </div>
                 <div className="w-10 h-[1.5px] bg-primary/20 rounded-full"></div>

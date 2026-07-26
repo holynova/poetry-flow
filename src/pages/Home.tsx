@@ -107,7 +107,6 @@ export const Home: React.FC<HomeProps> = ({ currentTheme, onThemeChange }) => {
 
       <div className="sm:hidden absolute inset-x-0 bottom-[max(1rem,env(safe-area-inset-bottom))] z-30 flex justify-center pointer-events-none">
         <motion.div
-          layout
           className="pointer-events-auto flex items-center gap-2 rounded-full border border-card-border bg-surface/92 p-1.5 shadow-card"
         >
           <button
@@ -122,9 +121,9 @@ export const Home: React.FC<HomeProps> = ({ currentTheme, onThemeChange }) => {
           <AnimatePresence initial={false}>
             {isActionTrayOpen && (
               <motion.button
-                initial={{ opacity: 0, scale: 0.75, width: 0 }}
-                animate={{ opacity: 1, scale: 1, width: 44 }}
-                exit={{ opacity: 0, scale: 0.75, width: 0 }}
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: 44 }}
+                exit={{ opacity: 0, width: 0 }}
                 transition={{ duration: 0.18 }}
                 onClick={() => setIsShareOpen(true)}
                 disabled={cards.length === 0}

@@ -10,7 +10,7 @@ interface HomeHeaderProps {
 
 export const HomeHeader: React.FC<HomeHeaderProps> = ({ currentTheme, onThemeChange }) => {
   const navigate = useNavigate();
-  const toolbarButtonClass = 'flex h-11 w-11 items-center justify-center rounded-full text-text-secondary transition-colors duration-200 hover:bg-surface/40 active:scale-95';
+  const toolbarButtonClass = 'flex h-11 w-11 items-center justify-center rounded-full text-text-secondary transition-colors duration-200 hover:bg-surface/40';
 
   const toggleTheme = () => {
     onThemeChange(currentTheme === 'light' ? 'dark' : 'light');
