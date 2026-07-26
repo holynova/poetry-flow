@@ -90,7 +90,7 @@ export const Home: React.FC<HomeProps> = ({ currentTheme, onThemeChange }) => {
 
       {/* On compact screens, reading takes the whole viewport. Swiping remains the primary control. */}
       <div
-        className={`flex-1 relative flex min-h-0 w-full max-w-md mx-auto px-2 py-2 transition-[padding] duration-200 sm:items-center sm:justify-center sm:px-4 sm:py-0 sm:my-2 select-none ${
+        className={`flex-1 relative flex min-h-0 w-full max-w-md mx-auto px-4 py-3 transition-[padding] duration-200 sm:items-center sm:justify-center sm:px-4 sm:py-0 sm:my-2 select-none ${
           isActionTrayOpen ? 'pt-[4.75rem] pb-[5.5rem] sm:pt-0 sm:pb-0' : 'pb-[5.5rem] sm:pb-0'
         }`}
       >

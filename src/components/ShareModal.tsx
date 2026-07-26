@@ -112,7 +112,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({ poem, isOpen, onClose, t
             <div className="w-full rounded-[28px] overflow-hidden border border-card-border shadow-2xl">
               <div 
                 ref={posterRef}
-                className="w-full bg-surface p-6 sm:p-8 flex flex-col justify-between items-stretch text-left relative z-10"
+                className="w-full bg-surface p-6 sm:p-10 flex flex-col justify-between items-stretch text-left relative z-10"
                 style={{ minHeight: '440px' }}
               >
                 <div className="w-full shrink-0 space-y-2 pt-0.5 text-[11px] font-sans tracking-[0.1em] text-text-secondary sm:tracking-[0.14em]">

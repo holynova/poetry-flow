@@ -25,9 +25,10 @@ export const getPoemTypography = (poem: Poem, surface: ReadingSurface = 'reader'
     : isShort ? 21 : isLong ? 16 : 18;
   const bodyFloor = surface === 'share' ? 12 : 12.5;
   const lineHeight = isShort ? 1.88 : isLong ? 1.66 : 1.76;
+  const horizontalAllowance = surface === 'reader' ? 72 : 80;
 
   const readingStyle = {
-    fontSize: `min(${bodyCap}px, max(${bodyFloor}px, calc((100vw - 20px) / ${longestLineLength})))`,
+    fontSize: `min(${bodyCap}px, max(${bodyFloor}px, calc((100vw - ${horizontalAllowance}px) / ${longestLineLength})))`,
     lineHeight,
   } as CSSProperties;
 

@@ -140,7 +140,7 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ poem, onSwipe, onTap, isFr
         )}
 
         {/* Card Content Wrapper */}
-        <div className="relative z-20 flex min-h-0 flex-1 flex-col px-2 py-4 text-left sm:p-10">
+        <div className="relative z-20 flex min-h-0 flex-1 flex-col px-5 py-5 text-left sm:p-10">
           <div className="w-full shrink-0 space-y-2 pt-0.5 text-[11px] font-sans tracking-[0.1em] text-text-secondary sm:mt-1 sm:tracking-[0.14em]">
             <div className="flex items-center justify-between gap-3 opacity-75">
               <span className="font-semibold">POETRY FLOW</span>
