@@ -23,7 +23,7 @@ export const getPoemTypography = (poem: Poem, surface: ReadingSurface = 'reader'
   const bodyCap = surface === 'share'
     ? isShort ? 17 : isLong ? 14 : 15
     : isShort ? 21 : isLong ? 16 : 18;
-  const bodyFloor = surface === 'share' ? 12 : 12.5;
+  const bodyFloor = 12;
   const lineHeight = isShort ? 1.88 : isLong ? 1.66 : 1.76;
   const horizontalAllowance = surface === 'reader' ? 72 : 80;
 
@@ -34,7 +34,7 @@ export const getPoemTypography = (poem: Poem, surface: ReadingSurface = 'reader'
 
   return {
     isLong,
-    titleSize: surface === 'share' ? (isLong ? '24px' : '27px') : isLong ? 'clamp(23px, 6vw, 32px)' : 'clamp(25px, 6vw, 34px)',
+    titleSize: surface === 'share' ? '24px' : 'clamp(24px, 6vw, 32px)',
     readingStyle,
     bodyGapClass: isLong ? 'space-y-1.5 sm:space-y-2' : 'space-y-2.5 sm:space-y-3',
     contentGapClass: isLong ? 'gap-4 sm:gap-5' : 'gap-5 sm:gap-7',

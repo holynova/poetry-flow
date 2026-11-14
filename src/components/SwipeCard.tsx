@@ -113,7 +113,7 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ poem, onSwipe, onTap, isFr
       className="absolute inset-0 flex items-center justify-center select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       <div 
-        className="relative w-full h-full rounded-[24px] sm:rounded-[32px] overflow-hidden border border-card-border bg-surface shadow-card flex flex-col transition-all duration-300"
+        className="relative w-full h-full rounded-[24px] sm:rounded-[32px] overflow-hidden border border-card-border bg-surface flex flex-col transition-all duration-300"
       >
         {/* Swipe Feedback Overlay */}
         <motion.div 
@@ -141,9 +141,9 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ poem, onSwipe, onTap, isFr
 
         {/* Card Content Wrapper */}
         <div className="relative z-20 flex min-h-0 flex-1 flex-col px-5 py-5 text-left sm:p-10">
-          <div className="w-full shrink-0 space-y-2 pt-0.5 text-[11px] font-sans tracking-[0.1em] text-text-secondary sm:mt-1 sm:tracking-[0.14em]">
+          <div className="w-full shrink-0 space-y-2 pt-0.5 text-xs font-sans tracking-[0.1em] text-text-secondary sm:mt-1 sm:tracking-[0.14em]">
             <div className="flex items-center justify-between gap-3 opacity-75">
-              <span className="font-semibold">POETRY FLOW</span>
+              <span className="font-semibold">Poetry Flow</span>
               {topic && <span className="max-w-[58%] shrink-0 whitespace-nowrap text-right">{topic}</span>}
             </div>
             <div aria-hidden="true" className="flex items-center gap-2 opacity-55">
@@ -179,11 +179,11 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({ poem, onSwipe, onTap, isFr
             {isFront && showSwipeHint && (
               <motion.div
                 initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 0.52, y: 0 }}
+                animate={{ opacity: 0.85, y: 0 }}
                 exit={{ opacity: 0, y: 3 }}
-                className="absolute bottom-20 left-0 right-0 z-30 text-center text-[10px] font-sans tracking-[0.08em] text-text-secondary sm:bottom-6"
+                className="absolute bottom-20 left-0 right-0 z-30 text-center text-xs font-sans tracking-[0.08em] text-text-secondary sm:bottom-6"
               >
-                向右喜欢，向左跳过 · 轻触页边展开工具
+                向右喜欢，向左跳过；轻触卡片展开工具
               </motion.div>
             )}
           </AnimatePresence>
