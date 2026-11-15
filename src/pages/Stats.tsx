@@ -16,7 +16,7 @@ export const Stats: React.FC = () => {
   ];
 
   // Classic Zen theme colors: Deep Green for likes, Muted gray for skips
-  const COLORS = ['#2F855A', '#9CA3AF'];
+  const COLORS = ['#2F855A', '#A8A29E'];
 
   return (
     <div className="flex flex-col h-full bg-background text-text-primary overflow-hidden">
@@ -29,7 +29,7 @@ export const Stats: React.FC = () => {
           >
             <ArrowLeft size={24} />
           </button>
-          <h1 className="text-lg font-bold font-sans tracking-wide">我的诗歌足迹</h1>
+          <h1 className="text-base font-bold font-sans tracking-wide">我的诗歌足迹</h1>
         </div>
       </div>
 
@@ -56,9 +56,9 @@ export const Stats: React.FC = () => {
               <motion.div
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-surface p-5 rounded-3xl border border-card-border flex flex-col justify-center h-28 shadow-sm"
+                className="bg-surface p-5 rounded-3xl border border-card-border flex flex-col justify-center h-28"
               >
-                <span className="text-text-secondary text-xs font-semibold tracking-wider mb-1">已阅读诗篇</span>
+                <span className="text-text-secondary text-xs font-semibold tracking-wider mb-1">累计滑动</span>
                 <div className="text-2xl font-bold font-sans text-text-primary">{stats.totalSwipes.toLocaleString()}</div>
               </motion.div>
 
@@ -66,7 +66,7 @@ export const Stats: React.FC = () => {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="bg-surface p-5 rounded-3xl border border-card-border flex flex-col justify-center h-28 shadow-sm"
+                className="bg-surface p-5 rounded-3xl border border-card-border flex flex-col justify-center h-28"
               >
                 <span className="text-text-secondary text-xs font-semibold tracking-wider mb-1">今日滑动</span>
                 <div className="text-2xl font-bold font-sans text-text-primary">{stats.todaySwipes.toLocaleString()}</div>
@@ -79,7 +79,7 @@ export const Stats: React.FC = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 }}
-                className="bg-surface p-6 rounded-[28px] border border-card-border shadow-sm"
+                className="bg-surface p-6 rounded-3xl border border-card-border"
               >
                 <h2 className="text-sm font-bold tracking-wider text-text-primary mb-2 flex items-center gap-2">
                   <ThumbsUp size={16} className="text-primary" />
@@ -104,8 +104,8 @@ export const Stats: React.FC = () => {
                     </PieChart>
                   </ResponsiveContainer>
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none">
-                    <div className="text-[10px] text-text-secondary tracking-widest uppercase">喜欢率</div>
-                    <div className="text-lg font-bold font-sans text-primary">
+                    <div className="text-xs text-text-secondary tracking-widest">喜欢率</div>
+                    <div className="text-base font-bold font-sans text-primary">
                       {stats.totalSwipes > 0 ? Math.round((stats.likes / stats.totalSwipes) * 100) : 0}%
                     </div>
                   </div>
@@ -113,11 +113,11 @@ export const Stats: React.FC = () => {
                 <div className="flex justify-center gap-6 mt-2 text-xs font-sans font-semibold">
                   <div className="flex items-center gap-2 text-text-primary">
                     <div className="w-2.5 h-2.5 rounded-full bg-[#2F855A]" />
-                    <span>收藏喜欢 ({stats.likes})</span>
+                    <span>喜欢 ({stats.likes})</span>
                   </div>
                   <div className="flex items-center gap-2 text-text-secondary">
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#9CA3AF]" />
-                    <span>快速跳过 ({stats.dislikes})</span>
+                    <div className="w-2.5 h-2.5 rounded-full bg-[#A8A29E]" />
+                    <span>跳过 ({stats.dislikes})</span>
                   </div>
                 </div>
               </motion.div>
@@ -128,7 +128,7 @@ export const Stats: React.FC = () => {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="bg-surface p-6 rounded-[28px] border border-card-border shadow-sm"
+              className="bg-surface p-6 rounded-3xl border border-card-border"
             >
               <h2 className="text-sm font-bold tracking-wider text-text-primary mb-4">本周活跃度</h2>
               <div className="h-44 w-full">
@@ -138,7 +138,7 @@ export const Stats: React.FC = () => {
                       dataKey="day" 
                       axisLine={false}
                       tickLine={false}
-                      tick={{ fill: 'var(--text-secondary)', fontSize: 11, fontWeight: 600 }}
+                      tick={{ fill: 'var(--text-secondary)', fontSize: 12, fontWeight: 600 }}
                     />
                     <Tooltip 
                       cursor={{ fill: 'rgba(128, 128, 128, 0.05)', radius: 6 }}

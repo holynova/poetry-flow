@@ -109,15 +109,15 @@ export const ShareModal: React.FC<ShareModalProps> = ({ poem, isOpen, onClose, t
             </div>
 
             {/* Poster Card Container (The element we capture) */}
-            <div className="w-full rounded-[28px] overflow-hidden border border-card-border shadow-2xl">
+            <div className="w-full rounded-3xl overflow-hidden border border-card-border shadow-2xl">
               <div 
                 ref={posterRef}
                 className="w-full bg-surface p-6 sm:p-10 flex flex-col justify-between items-stretch text-left relative z-10"
                 style={{ minHeight: '440px' }}
               >
-                <div className="w-full shrink-0 space-y-2 pt-0.5 text-[11px] font-sans tracking-[0.1em] text-text-secondary sm:tracking-[0.14em]">
+                <div className="w-full shrink-0 space-y-2 pt-0.5 text-xs font-sans tracking-[0.1em] text-text-secondary sm:tracking-[0.14em]">
                   <div className="flex items-center justify-between gap-3 opacity-75">
-                    <span className="font-semibold">POETRY FLOW</span>
+                    <span className="font-semibold">Poetry Flow</span>
                     {topic && <span className="max-w-[58%] shrink-0 whitespace-nowrap text-right">{topic}</span>}
                   </div>
                   <div aria-hidden="true" className="flex items-center gap-2 opacity-55">
@@ -147,20 +147,20 @@ export const ShareModal: React.FC<ShareModalProps> = ({ poem, isOpen, onClose, t
                 {showMeta && (
                   <div className="w-full mt-6 pt-5 border-t border-card-border flex items-center justify-between text-left px-2 gap-4">
                     <div className="space-y-1.5 min-w-0">
-                      <p className="text-[11px] font-sans font-bold text-text-primary tracking-wide">
+                      <p className="text-xs font-sans font-bold text-text-primary tracking-wide">
                         Poetry Flow 诗歌流
                       </p>
-                      <p className="text-[9px] font-sans text-text-secondary truncate opacity-85">
+                      <p className="text-xs font-sans text-text-secondary truncate opacity-85">
                         {projectUrl}
                       </p>
-                      <p className="text-[8px] font-sans text-text-secondary opacity-60">
+                      <p className="text-xs font-sans text-text-secondary opacity-60">
                         长按或扫码，发现下一首诗
                       </p>
                     </div>
                     {qrCodeUrl && (
                       <img 
                         src={qrCodeUrl} 
-                        alt="QR Code" 
+                        alt="诗歌流项目二维码" 
                         className="w-16 h-16 object-contain rounded-md border border-card-border shrink-0" 
                       />
                     )}
@@ -187,10 +187,10 @@ export const ShareModal: React.FC<ShareModalProps> = ({ poem, isOpen, onClose, t
               <button
                 onClick={handleDownload}
                 disabled={generating}
-                className="w-full py-3 bg-primary text-background font-sans font-bold rounded-xl text-sm tracking-wider flex items-center justify-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-55 disabled:pointer-events-none shadow-md"
+                className="w-full py-3 bg-primary text-background font-sans font-bold rounded-xl text-sm tracking-wider flex items-center justify-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-55 disabled:pointer-events-none"
               >
                 <Download size={18} />
-                {generating ? '正在生成图片...' : '保存高清卡片图片'}
+                {generating ? '正在生成图片…' : '保存高清卡片图片'}
               </button>
             </div>
           </motion.div>

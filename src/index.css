@@ -17,10 +17,10 @@
 
 :root {
   /* Default Theme: light (日光 - 白天) */
-  --background: #F3F5F2; /* Soft organic off-white/light green tint */
+  --background: #F4F3EF; /* Soft warm off-white */
   --surface: #FFFFFF;    /* Clean solid white card */
   --text-primary: #1F2421; /* Deep charcoal */
-  --text-secondary: #58655F; /* Moss gray */
+  --text-secondary: #5F6157; /* Warm gray */
   --primary: #2F855A;     /* Original classic Zen Green */
   --primary-light: rgba(47, 133, 90, 0.08);
   --danger: #EF4444;
@@ -32,8 +32,8 @@
   /* Theme: dark (夜幕 - 黑暗) */
   --background: #111412;  /* Deep dark forest charcoal */
   --surface: #1B201D;     /* Solid dark moss card */
-  --text-primary: #E2ECE7; /* Minty soft white */
-  --text-secondary: #809288; /* Slate moss gray */
+  --text-primary: #E6E9E2; /* Soft warm white */
+  --text-secondary: #8A8D80; /* Warm gray */
   --primary: #52B788;     /* Soft glowing mint green */
   --primary-light: rgba(82, 183, 136, 0.15);
   --danger: #FF6B6B;

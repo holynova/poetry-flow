@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Heart, Sun, Moon, Github } from 'lucide-react';
+import { BarChart2, Heart, Sun, Moon, Github } from 'lucide-react';
 import type { ThemeId } from '../types';
 
 interface HomeHeaderProps {
@@ -26,7 +26,7 @@ export const HomeHeader: React.FC<HomeHeaderProps> = ({ currentTheme, onThemeCha
           title="我的足迹"
           aria-label="我的足迹"
         >
-          <User size={22} />
+          <BarChart2 size={22} />
         </button>
 
         <a
