@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="360" viewBox="0 0 1200 360"
+     role="img" aria-labelledby="title desc">
+  <title id="title">诗歌流 Poetry Flow — 左右滑动读现代诗</title>
+  <desc id="desc">暖纸底竖排诗行标题：诗歌流，副标题左右滑动，遇见下一首诗；右侧是一张竖排诗卡，诗句从上往下流动，下方有叉与爱心两个滑动按钮。</desc>
+
+  <rect width="1200" height="360" rx="26" fill="#f7f2e7"/>
+
+  <g id="title-block" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+    <text x="56" y="62" font-size="19" letter-spacing="3" fill="#6e6248">现代诗歌卡片 · SWIPE THROUGH MODERN POETRY</text>
+    <text x="56" y="128" font-size="62" font-weight="700" fill="#2b2620">诗歌流</text>
+    <text x="56" y="168" font-size="23" fill="#4a4234">POETRY FLOW — 左右滑动，遇见下一首诗</text>
+    <text x="56" y="204" font-size="19" fill="#6b6049">840 首现代诗，一张卡片一首诗，滑过即是足迹。</text>
+    <g id="chips" font-size="18" fill="#3a3226" text-anchor="middle">
+      <g><rect x="56" y="238" width="150" height="36" rx="18" fill="#efe7d3" stroke="#d8cbae" stroke-width="1.5"/><text x="131" y="262">840 首现代诗</text></g>
+      <g><rect x="218" y="238" width="150" height="36" rx="18" fill="#efe7d3" stroke="#d8cbae" stroke-width="1.5"/><text x="293" y="262">左右滑动选诗</text></g>
+      <g><rect x="380" y="238" width="150" height="36" rx="18" fill="#efe7d3" stroke="#d8cbae" stroke-width="1.5"/><text x="455" y="262">日光 / 夜幕</text></g>
+      <g><rect x="542" y="238" width="150" height="36" rx="18" fill="#efe7d3" stroke="#d8cbae" stroke-width="1.5"/><text x="617" y="262">分享海报</text></g>
+    </g>
+  </g>
+
+  <g id="card-diagram" font-family="'Noto Serif SC', 'Songti SC', serif">
+    <g id="card-back" transform="rotate(4 960 180)">
+      <rect x="852" y="48" width="216" height="264" rx="20" fill="#e9dfc9"/>
+    </g>
+    <g id="card-front">
+      <rect x="836" y="40" width="216" height="264" rx="20" fill="#fffdf7" stroke="#d8cbae" stroke-width="2"/>
+      <g font-size="21" fill="#2b2620" text-anchor="middle">
+        <text x="1016" y="88">荒</text><text x="1016" y="116">漠</text><text x="1016" y="144">里</text><text x="1016" y="172">的</text><text x="1016" y="200">钟</text>
+      </g>
+      <g font-size="22" fill="#4a4234" text-anchor="middle">
+        <text x="972" y="92">夜</text><text x="972" y="120">里</text><text x="972" y="148">的</text><text x="972" y="176">荒</text><text x="972" y="204">漠</text><text x="972" y="232">铺</text><text x="972" y="260">开</text>
+        <text x="934" y="92">灰</text><text x="934" y="120">色</text><text x="934" y="148">的</text><text x="934" y="176">梦</text><text x="934" y="204">旧</text><text x="934" y="232">石</text><text x="934" y="260">碑</text>
+        <text x="896" y="92">旁</text><text x="896" y="120">风</text><text x="896" y="148">的</text><text x="896" y="176">钟</text><text x="896" y="204">表</text><text x="896" y="232">缓</text><text x="896" y="260">慢</text>
+      </g>
+    </g>
+    <g id="swipe-buttons" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
+      <g><circle cx="812" cy="330" r="18" fill="#ffffff" stroke="#d8cbae" stroke-width="2"/><text x="812" y="337" font-size="20" fill="#8f3a26" text-anchor="middle">✕</text></g>
+      <g><circle cx="1076" cy="330" r="18" fill="#ffffff" stroke="#6b8f66" stroke-width="2"/><text x="1076" y="337" font-size="20" fill="#3f6b3a" text-anchor="middle">♥</text></g>
+    </g>
+    <text x="944" y="336" font-size="18" fill="#6e6248" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">左滑略过 · 右滑喜欢</text>
+  </g>
+</svg>
